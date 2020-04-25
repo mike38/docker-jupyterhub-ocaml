@@ -57,9 +57,14 @@ WORKDIR /notebooks
 COPY entrypoint.sh /
 RUN sudo  chmod +x /entrypoint.sh
 COPY .ocamlinit    /home/opam/.ocamlinit
+#RUN sudo chown -hR opam:opam /home/opam/.jupyter
+#RUN sudo chown -hR opam:opam /notebooks
 #COPY .jupyter      /home/opam/.jupyter
 
-EXPOSE 8888
+#EXPOSE 8888
 
+#ENTRYPOINT ["/opt/conda/bin/tini" "-g" "--"]
+#CMD ["echo"]
 ENTRYPOINT [ "/entrypoint.sh" ]
-CMD [ "jupyter", "notebook", "--no-browser", "--ip=*" ]
+CMD [ "start-notebook.sh" ]
+#CMD [ "jupyter", "notebook", "--no-browser", "--ip=*" ]

@@ -12,8 +12,9 @@ services:
       - 8082:8081
       - 8002:8000
     environment:
-      - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      - DOCKER_JUPYTER_CONTAINER=jupyterocaml_img
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - DOCKER_NOTEBOOK_DIR=/notebooks  
       - HUB_IP=jupyterhub
       - HOST
     restart: on-failure
@@ -24,6 +25,14 @@ services:
     container_name: jupyterlab-throaway
     network_mode: none
     command: echo
+  
+  jupyter_ocaml:
+    build: jupyter_ocaml
+    image: jupyterocaml_img
+    container_name: jupyterocaml
+    network_mode: none
+    command: echo
+
 
 volumes:
   jupyterhub_data:

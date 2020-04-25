@@ -14,10 +14,10 @@ import os
 c.JupyterHub.log_level = 'DEBUG'
 
 # Enable debug-logging of the single-user server
-#c.Spawner.debug = True
+c.Spawner.debug = True
 
 # Enable debug-logging of the single-user server
-#c.LocalProcessSpawner.debug = True
+c.LocalProcessSpawner.debug = True
 
 ## Generic
 c.JupyterHub.admin_access = True
