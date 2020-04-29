@@ -4,25 +4,29 @@ services:
   jupyterhub:
     build: jupyterhub
     image: jupyterhub_img
-    container_name: jupyterhub
+    container_name: jupyterhub_test
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - jupyterhub_data:/srv/jupyterhub
+      - jupyterhub_test_data:/srv/jupyterhub
     ports:
       - 8082:8081
       - 8002:8000
     environment:
       - DOCKER_JUPYTER_CONTAINER=jupyterocaml_img
-      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - DOCKER_NOTEBOOK_DIR=/notebooks  
-      - HUB_IP=jupyterhub
+        #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
+      - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - HUB_IP=jupyterhub_test
       - HOST
+      - LTI_CLIENT_KEY=bc31beb41e9065d459b33b2c9430a5b6fbdcfe310d29e4e4c9789e275fa7702b
+      - LTI_CLIENT_SECRET=b5fb2b27fe34b61c95727b8f8395fe144d8c99356133eaa550af90b87b573577
+      - BASE_URL=test
     restart: on-failure
 
   jupyterlab:
     build: jupyterlab
     image: jupyterlab_img
-    container_name: jupyterlab-throaway
+    container_name: jupyterlab-test
     network_mode: none
     command: echo
   
@@ -35,4 +39,4 @@ services:
 
 
 volumes:
-  jupyterhub_data:
+  jupyterhub_test_data:
