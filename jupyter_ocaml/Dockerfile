@@ -26,7 +26,7 @@ USER opam
 WORKDIR $HOME
 
 RUN sudo apt-get install -y libzmq3-dev zlib1g-dev libgmp-dev zlib1g  libzmq5 libgmp10 libcairo2-dev && \
-    sudo apt-get install -y  texlive-xetex texlive-fonts-recommended texlive-generic-recommended pandoc && \
+    sudo apt-get install -y  texlive-xetex texlive-fonts-recommended texlive-plain-generic pandoc && \
     mkdir -p /home/opam/.jupyter && \
     opam install -y 'merlin>=3.0.0' ocaml-migrate-parsetree jupyter && \
     opam install -y archimedes jupyter-archimedes graphics 
@@ -38,11 +38,26 @@ RUN    eval `opam env` && \
     rm -rf $HOME/.opam/archives \
            $HOME/.opam/repo/default/archives \
            $HOME/.opam/$OCAML_VERSION/man \
-           $HOME/.opam/$OCAML_VERSION/build && \
-    \
-    sudo apt-get remove -y m4 pkg-config gcc zlib1g-dev libgmp-dev libzmq3-dev python3-dev python3-pip && \
+           $HOME/.opam/$OCAML_VERSION/build 
+
+USER root
+WORKDIR /tmp
+
+RUN apt-get install -y git 
+RUN git clone https://github.com/XaverKlemenschits/jupyter-c-kernel.git
+
+#COPY ./ jupyter_c_kernel/
+
+RUN pip install --no-cache-dir -e jupyter-c-kernel/ > piplog.txt
+RUN cd jupyter-c-kernel && install_c_kernel --user > installlog.txt
+
+
+USER opam
+RUN  sudo apt-get remove -y m4 pkg-config git zlib1g-dev libgmp-dev libzmq3-dev python3-dev python3-pip && \
     sudo apt-get autoremove -y && \
     sudo apt-get autoclean
+
+
 
 VOLUME /notebooks
 #VOLUME /home/opam/.jupyter

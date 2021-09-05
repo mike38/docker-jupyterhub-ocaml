@@ -59,9 +59,11 @@ c.Spawner.mem_limit = '10G'
 
 c.JupyterHub.authenticator_class = 'ltiauthenticator.LTIAuthenticator'
 
-c.LTIAuthenticator.consumers = {
+c.LTI11Authenticator.consumers = {
 os.environ['LTI_CLIENT_KEY']: os.environ['LTI_CLIENT_SECRET']
-                     }
+}      
+
+c.LTI11Authenticator.username_key = "lis_person_name_full"
 
 ## Services
 #c.JupyterHub.services = [
