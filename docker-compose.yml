@@ -14,7 +14,6 @@ services:
     environment:
       - DOCKER_JUPYTER_CONTAINER=jupyterocaml_img
       - DOCKER_NOTEBOOK_DIR=/notebooks  
-        #- DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
       - HUB_IP=jupyterhub_test
       - HOST
@@ -23,13 +22,6 @@ services:
       - BASE_URL=test
     restart: on-failure
 
-  jupyterlab:
-    build: jupyterlab
-    image: jupyterlab_img
-    container_name: jupyterlab-test
-    network_mode: none
-    command: echo
-  
   jupyter_ocaml:
     build: jupyter_ocaml
     image: jupyterocaml_img

@@ -1,7 +1,7 @@
-FROM jupyterhub/singleuser:1.2 
+FROM jupyter/scipy-notebook:latest
 
-ENV OPAM_VERSION  2.0.6
-ENV OCAML_VERSION 4.10.0
+ENV OPAM_VERSION  2.1.0
+ENV OCAML_VERSION 4.12.0
 ENV HOME          /home/opam
 
 USER root
@@ -53,7 +53,10 @@ RUN cd jupyter-c-kernel && install_c_kernel --user > installlog.txt
 
 
 USER opam
-RUN  sudo apt-get remove -y m4 pkg-config git zlib1g-dev libgmp-dev libzmq3-dev python3-dev python3-pip && \
+
+RUN pip install  ipython-sql
+
+RUN  sudo apt-get remove -y m4 pkg-config zlib1g-dev libgmp-dev libzmq3-dev python3-dev python3-pip && \
     sudo apt-get autoremove -y && \
     sudo apt-get autoclean
 
