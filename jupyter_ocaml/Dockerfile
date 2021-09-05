@@ -7,6 +7,7 @@ ENV HOME          /home/opam
 USER root
 RUN apt-get update && \
     apt-get upgrade -y && \
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     apt-get  install -y sudo patch unzip curl make gcc libx11-dev m4 bubblewrap pkg-config  && \
     adduser --disabled-password --home $HOME --shell /bin/bash --gecos '' opam && \
     \
@@ -23,19 +24,12 @@ RUN su opam -c "opam init -a -y --comp $OCAML_VERSION --disable-sandboxing" && \
 
 USER opam
 WORKDIR $HOME
-#RUN sudo apt-get update && \
-#    sudo apt-get upgrade -y && \
-#    sudo apt-get install -y zlib1g libgmp10 libzmq5 python3 \
-#                            m4 pkg-config gcc zlib1g-dev libgmp-dev libzmq3-dev python3-dev python3-pip && \
-#    \
-#    sudo pip3 install --upgrade pip && \
-#    pip3 install --user --no-cache-dir 'setuptools>=18.5' 'six>=1.9.0' jupyter && \
-#    mkdir -p /home/opam/.jupyter && \
-#   
 
-RUN sudo apt-get install -y libzmq3-dev zlib1g-dev libgmp-dev zlib1g  libzmq5 libgmp10 && \
+RUN sudo apt-get install -y libzmq3-dev zlib1g-dev libgmp-dev zlib1g  libzmq5 libgmp10 libcairo2-dev && \
+    sudo apt-get install -y  texlive-xetex texlive-fonts-recommended texlive-generic-recommended pandoc && \
     mkdir -p /home/opam/.jupyter && \
-    opam install -y 'merlin>=3.0.0' ocaml-migrate-parsetree jupyter 
+    opam install -y 'merlin>=3.0.0' ocaml-migrate-parsetree jupyter && \
+    opam install -y archimedes jupyter-archimedes graphics 
 
 RUN    eval `opam env` && \
     ocaml-jupyter-opam-genspec && \
@@ -57,14 +51,7 @@ WORKDIR /notebooks
 COPY entrypoint.sh /
 RUN sudo  chmod +x /entrypoint.sh
 COPY .ocamlinit    /home/opam/.ocamlinit
-#RUN sudo chown -hR opam:opam /home/opam/.jupyter
-#RUN sudo chown -hR opam:opam /notebooks
-#COPY .jupyter      /home/opam/.jupyter
 
-#EXPOSE 8888
-
-#ENTRYPOINT ["/opt/conda/bin/tini" "-g" "--"]
-#CMD ["echo"]
 ENTRYPOINT [ "/entrypoint.sh" ]
 CMD [ "start-notebook.sh" ]
 #CMD [ "jupyter", "notebook", "--no-browser", "--ip=*" ]
